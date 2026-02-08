@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-base-100 p-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Title -->
+        <h1 class="text-5xl font-bold text-gray-800 mb-8">Caesar Cipher</h1>
+        
+        <!-- Tabs -->
+        <div role="tablist" class="tabs tabs-bordered mb-6">
+            <input type="radio" name="cipher_tabs" role="tab" class="tab text-lg" aria-label="Encrypt" checked />
+            <div role="tabpanel" class="tab-content pt-6">
+                <!-- Encrypt Tab Content -->
+                <div class="space-y-6">
+                    <!-- Plain Text Input -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text text-gray-700 font-medium">Plain Text:</span>
+                        </label>
+                        <input type="text" id="plainText" placeholder="" class="input input-bordered w-full bg-white" />
+                    </div>
+                    
+                    <!-- Shift Input -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text text-gray-700 font-medium">Shift:</span>
+                        </label>
+                        <input type="number" id="encryptShift" placeholder="" class="input input-bordered w-full bg-white" min="0" max="25" />
+                    </div>
+                    
+                    <!-- Cipher Text Output -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text text-gray-700 font-medium">Cipher text:</span>
+                        </label>
+                        <div class="bg-pink-100 p-4 rounded-lg min-h-[60px]">
+                            <span id="encryptedOutput" class="text-gray-600">...</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Encrypt Button -->
+                    <div class="flex justify-center mt-8">
+                        <button onclick="encrypt()" class="btn btn-error text-white px-8">Encrypt</button>
+                    </div>
+                </div>
+            </div>
+
+            <input type="radio" name="cipher_tabs" role="tab" class="tab text-lg" aria-label="Decrypt" />
+            <div role="tabpanel" class="tab-content pt-6">
+                <!-- Decrypt Tab Content -->
+                <div class="space-y-6">
+                    <!-- Cipher Text Input -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text text-gray-700 font-medium">Cipher Text:</span>
+                        </label>
+                        <input type="text" id="cipherText" placeholder="" class="input input-bordered w-full bg-white" />
+                    </div>
+                    
+                    <!-- Shift Input -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text text-gray-700 font-medium">Shift:</span>
+                        </label>
+                        <input type="number" id="decryptShift" placeholder="" class="input input-bordered w-full bg-white" min="0" max="25" />
+                    </div>
+                    
+                    <!-- Plain Text Output -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text text-gray-700 font-medium">Plain text:</span>
+                        </label>
+                        <div class="bg-blue-100 p-4 rounded-lg min-h-[60px]">
+                            <span id="decryptedOutput" class="text-gray-600">...</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Decrypt Button -->
+                    <div class="flex justify-center mt-8">
+                        <button onclick="decrypt()" class="btn btn-info text-white px-8">Decrypt</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Caesar Cipher Encryption Core Function
+        function CeasarCipherEnc(plaintext, shift) {
+            let ciphertext = "";
+            for (let i = 0; i < plaintext.length; i++) {
+                let charCode = plaintext.charCodeAt(i);
+                // Uppercase letters
+                if (charCode >= 65 && charCode <= 90) {
+                    let encrypted =
+                        ((charCode - 65 + shift) % 26) + 65;
+                    ciphertext += String.fromCharCode(encrypted);
+                }
+                // Lowercase letters
+                else if (charCode >= 97 && charCode <= 122) {
+                    let encrypted =
+                        ((charCode - 97 + shift) % 26) + 97;
+                    ciphertext += String.fromCharCode(encrypted);
+                }
+                // Other characters
+                else {
+                    ciphertext += plaintext[i];
+                }
+            }
+            return ciphertext;
+        }
+        
+        // Caesar Cipher Decryption Core Function
+        function CeasarCipherDec(ciphertext, shift) {
+            let plaintext = "";
+            for (let i = 0; i < ciphertext.length; i++) {
+                let charCode = ciphertext.charCodeAt(i);
+                // Uppercase letters
+                if (charCode >= 65 && charCode <= 90) {
+                    let decrypted =
+                        ((charCode - 65 - shift + 26) % 26) + 65;
+                    plaintext += String.fromCharCode(decrypted);
+                }
+                // Lowercase letters
+                else if (charCode >= 97 && charCode <= 122) {
+                    let decrypted =
+                        ((charCode - 97 - shift + 26) % 26) + 97;
+                    plaintext += String.fromCharCode(decrypted);
+                }
+                // Other characters
+                else {
+                    plaintext += ciphertext[i];
+                }
+            }
+            return plaintext;
+        }
+        
+        // Encrypt Button Handler
+        function encrypt() {
+            const plainText = document.getElementById('plainText').value;
+            const shift = parseInt(document.getElementById('encryptShift').value) || 0;
+            
+            if (!plainText) {
+                document.getElementById('encryptedOutput').textContent = '...';
+                return;
+            }
+            
+            const encrypted = CeasarCipherEnc(plainText, shift);
+            document.getElementById('encryptedOutput').textContent = encrypted;
+        }
+        
+        // Decrypt Button Handler
+        function decrypt() {
+            const cipherText = document.getElementById('cipherText').value;
+            const shift = parseInt(document.getElementById('decryptShift').value) || 0;
+            
+            if (!cipherText) {
+                document.getElementById('decryptedOutput').textContent = '...';
+                return;
+            }
+            
+            const decrypted = CeasarCipherDec(cipherText, shift);
+            document.getElementById('decryptedOutput').textContent = decrypted;
+        }
+        
+        // Allow Enter key to trigger encryption/decryption
+        document.getElementById('plainText').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') encrypt();
+        });
+        
+        document.getElementById('encryptShift').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') encrypt();
+        });
+        
+        document.getElementById('cipherText').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') decrypt();
+        });
+        
+        document.getElementById('decryptShift').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') decrypt();
+        });
+    </script>
+</body>
+</html>

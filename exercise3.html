@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise3</title>
+</head>
+    <body>
+        <h1 style="color: brown">Advanced Greeting Machine</h1>
+        
+        <h2 id = "day" style="color: blueviolet;"></h2>
+        <h2 id = "time" style="color: orange;"></h2>
+        <h2>
+            <button onclick="Greeting()">Greet Me!!!</button>
+        </h2>
+        <h1 id="hour"></h1>
+        <script>
+            
+            function DisplayTime(){
+                const date = new Date();
+                const day = date.toLocaleDateString();
+                const time = date.toLocaleTimeString();
+
+                
+                document.getElementById("day").innerHTML = `Today is ${day}`
+                document.getElementById("time").innerHTML = `It is ${time}`
+            }
+            function Greeting() {
+                const hour = new Date().getHours();
+                if ( hour >= 5 && hour < 12 ) {
+                    alert("Good Morning!")
+                }
+                else if ( hour >= 12 && hour < 17) {
+                    alert("Good Afternoon!")
+                }
+                else if (hour >= 17 && hour < 21) {
+                    alert("Good Evening!")
+                }
+                else alert("Good Night!")
+                
+            }
+            const interval = setInterval(DisplayTime, 1000);
+        </script>
+    </body>
+</html>
